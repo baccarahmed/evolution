@@ -1,0 +1,148 @@
+.services-section {
+  background: transparent;
+  position: relative;
+}
+
+.services-section .grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 640px) {
+  .services-section .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .services-section .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .services-section .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+.service-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.service-card:hover::before {
+  opacity: 1;
+}
+
+.service-card::after {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.service-card:hover::after {
+  opacity: 1;
+}
+
+.service-card:hover {
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  transform: translateY(-0.75rem) scale(1.02);
+}
+
+.service-card h3 {
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+.service-card p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* Custom glow effect for each card on hover */
+.service-card:nth-child(1):hover {
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(59, 130, 246, 0.2),
+    0 0 50px rgba(59, 130, 246, 0.15);
+}
+
+.service-card:nth-child(2):hover {
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(168, 85, 247, 0.2),
+    0 0 50px rgba(168, 85, 247, 0.15);
+}
+
+.service-card:nth-child(3):hover {
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(245, 158, 11, 0.2),
+    0 0 50px rgba(245, 158, 11, 0.15);
+}
+
+.service-card:nth-child(4):hover {
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(16, 185, 129, 0.2),
+    0 0 50px rgba(16, 185, 129, 0.15);
+}
+
+/* Icon container specific styles */
+.service-card:nth-child(1) .w-16 {
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25);
+}
+
+.service-card:nth-child(2) .w-16 {
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.25);
+}
+
+.service-card:nth-child(3) .w-16 {
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.25);
+}
+
+.service-card:nth-child(4) .w-16 {
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
+}
+
+/* Background decorations animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.services-section div[class*="absolute"] {
+  animation: float 8s ease-in-out infinite;
+}
+
+.services-section div[class*="absolute"]:nth-child(2) {
+  animation-delay: 2s;
+}

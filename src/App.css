@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+@plugin 'lightswind/plugin';
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.main-content {
+  min-height: calc(100vh - 160px);
+  padding-top: calc(var(--ticker-height) + 120px); /* Increased offset for ticker + navbar + padding */
+}
+
+@media (max-width: 1024px) {
+  .main-content {
+    padding-top: calc(var(--ticker-height) + 110px);
+  }
+}
+
+@media (max-width: 640px) {
+  .main-content {
+    padding-top: calc(var(--ticker-height) + 100px);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: calc(var(--ticker-height) + 90px);
+  }
+}

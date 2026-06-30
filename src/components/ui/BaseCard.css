@@ -1,0 +1,55 @@
+.base-card {
+  background: rgba(24, 24, 27, 0.5);
+  backdrop-blur: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.base-card--primary {
+  border: 2px solid var(--primary-color);
+}
+
+.base-card--secondary {
+  border: 2px solid var(--gray-300);
+}
+
+.base-card--accent {
+  border: 2px solid var(--accent-color);
+}
+
+.base-card--shadow-none {
+  box-shadow: none;
+}
+
+.base-card--shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.base-card--shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.base-card--shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.base-card--shadow-xl {
+  box-shadow: var(--shadow-xl);
+}
+
+.base-card--padding-none {
+  padding: 0;
+}
+
+.base-card--padding-small {
+  padding: 1rem;
+}
+
+.base-card--padding-medium {
+  padding: 1.5rem;
+}
+
+.base-card--padding-large {
+  padding: 2rem;
+}

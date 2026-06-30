@@ -1,0 +1,154 @@
+.crypto-banner-container {
+  width: 100%;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  padding: 60px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  margin: 60px 0;
+}
+
+.crypto-banner-track {
+  display: flex;
+  width: max-content;
+  animation: scroll-left 50s linear infinite;
+  gap: 100px;
+  align-items: center;
+}
+
+.crypto-banner-track:hover {
+  animation-play-state: paused;
+}
+
+.crypto-logo-item {
+  flex: 0 0 auto;
+  perspective: 1000px;
+}
+
+.crypto-3d-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Dynamic 3D Coin Style based on Crypto Color */
+.crypto-coin {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: coin-rotate 10s linear infinite;
+}
+
+@media (max-width: 640px) {
+  .crypto-coin {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .crypto-banner-container {
+    padding: 40px 0;
+    margin: 40px 0;
+  }
+  
+  .crypto-banner-track {
+    gap: 60px;
+  }
+  
+  .crypto-name {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+  }
+}
+
+.coin-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  backface-visibility: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 30%, var(--coin-color), #000);
+  border: 4px solid var(--coin-color);
+  box-shadow: 0 0 20px var(--coin-color);
+}
+
+.coin-front {
+  transform: translateZ(5px);
+  z-index: 2;
+}
+
+.coin-back {
+  transform: rotateY(180deg) translateZ(5px);
+}
+
+.coin-edge {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--coin-color);
+  transform: translateZ(0);
+  filter: brightness(0.7);
+}
+
+.coin-logo-img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+}
+
+.crypto-symbol-fallback {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.crypto-name {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px var(--coin-color);
+  opacity: 0.8;
+}
+
+@keyframes coin-rotate {
+  from { transform: rotateY(0deg) rotateX(10deg); }
+  to { transform: rotateY(360deg) rotateX(10deg); }
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-100% / 3)); }
+}
+
+/* Edge Fades */
+.crypto-banner-container::before,
+.crypto-banner-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.crypto-banner-container::before {
+  left: 0;
+  background: linear-gradient(to right, #000 0%, transparent 100%);
+}
+
+.crypto-banner-container::after {
+  right: 0;
+  background: linear-gradient(to left, #000 0%, transparent 100%);
+}

@@ -1,0 +1,26 @@
+.formations-grid {
+  padding: 3rem 0;
+}
+
+.cta-section {
+  padding: 3rem 0;
+  background-color: var(--gray-100);
+}
+
+.cta-content {
+  text-align: center;
+}
+
+.cta-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.cta-content p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  color: white;
+}

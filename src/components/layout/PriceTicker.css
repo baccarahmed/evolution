@@ -1,0 +1,19 @@
+.ticker-wrapper {
+  width: 100%;
+  height: var(--ticker-height);
+  background-color: #000000;
+  border-bottom: 1px solid #1e293b;
+  overflow: hidden;
+  z-index: 1001;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+#tradingview-ticker-container {
+  width: 100%;
+}
+
+.tradingview-widget-container {
+  height: var(--ticker-height) !important;
+}
