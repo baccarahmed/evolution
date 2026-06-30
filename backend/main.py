@@ -235,9 +235,21 @@ def startup_event():
         db.execute(text("UPDATE spotlights SET image_url = REPLACE(image_url, '8001', '8000')"))
         db.commit()
         
-        # Ensure admin user is admin
+        # Ensure admin user exists and is admin
         admin_user = db.query(models.User).filter(models.User.email == 'baccarahmed07@gmail.com').first()
-        if admin_user:
+        if not admin_user:
+            # Create default admin user
+            admin_user = models.User(
+                email='baccarahmed07@gmail.com',
+                full_name='TradeMaster Admin',
+                hashed_password=auth.get_password_hash('Admin123!'),
+                role='admin',
+                is_active=True
+            )
+            db.add(admin_user)
+            db.commit()
+            print("Created default admin user! Email: baccarahmed07@gmail.com | Password: Admin123!")
+        else:
             if admin_user.role != 'admin':
                 admin_user.role = 'admin'
                 db.commit()
