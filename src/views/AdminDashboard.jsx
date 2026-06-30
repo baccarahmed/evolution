@@ -1008,7 +1008,12 @@ const AdminDashboard = () => {
                       <span className={`text-[10px] font-black px-2 py-1 rounded-full ${spot.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                         {spot.is_active ? 'ACTIF' : 'INACTIF'}
                       </span>
-                      <button onClick={() => adminApi.deleteSpotlight(spot.id)} className="text-red-400 hover:text-red-300 text-xs font-bold">Supprimer</button>
+                      <button onClick={async () => {
+                        if(window.confirm("Supprimer ce spotlight ?")) {
+                          await adminApi.deleteSpotlight(spot.id);
+                          setSpotlights(spotlights.filter(s => s.id !== spot.id));
+                        }
+                      }} className="text-red-400 hover:text-red-300 text-xs font-bold">Supprimer</button>
                     </div>
                   </div>
                 </div>

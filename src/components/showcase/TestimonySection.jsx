@@ -3,39 +3,9 @@ import { motion } from 'framer-motion';
 import { ThreeDTestimonyRing } from './3d-testimony-ring';
 import api from '../../api';
 
-const defaultTestimonials = [
-  {
-    id: 1,
-    name: "Ahmed K.",
-    role: "Prop Firm Trader",
-    text: "EVOLUTION a complètement changé ma vision du marché. Le pack Ultimate m'a permis de valider mon premier compte à 100k$.",
-    avatar: "https://i.pravatar.cc/150?u=ahmed",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-man-working-on-his-laptop-in-a-coffee-shop-34441-large.mp4",
-    rating: 5
-  },
-  {
-    id: 2,
-    name: "Sarah L.",
-    role: "Beginner Trader",
-    text: "La clarté des cours est incroyable. Je suis passée de zéro à mes premiers profits en seulement 3 mois avec le pack Pro.",
-    avatar: "https://i.pravatar.cc/150?u=sarah",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-young-woman-working-on-a-laptop-at-home-42442-large.mp4",
-    rating: 5
-  },
-  {
-    id: 3,
-    name: "Yassine M.",
-    role: "Swing Trader",
-    text: "Le support 24/7 et la communauté Discord sont des atouts majeurs. On ne se sent jamais seul face aux graphiques.",
-    avatar: "https://i.pravatar.cc/150?u=yassine",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-businessman-working-on-a-laptop-in-an-office-42441-large.mp4",
-    rating: 5
-  }
-];
-
 const TestimonySection = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [testimonials, setTestimonials] = useState(defaultTestimonials);
+  const [testimonials, setTestimonials] = useState([]);
 
   useEffect(() => {
     const fetchEliteVideos = async () => {
@@ -44,7 +14,7 @@ const TestimonySection = () => {
         if (response.data && response.data.length > 0) {
           // Transform backend videos to match testimonial format
           const formattedVideos = response.data.map(video => {
-            // Check if videoUrl is a relative path from backend
+            // Check if video_url is a relative path from backend
             let fullVideoUrl = video.video_url.startsWith('http') 
               ? video.video_url 
               : `${api.defaults.baseURL.replace('/api', '')}${video.video_url}`;
@@ -65,7 +35,7 @@ const TestimonySection = () => {
                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(video.title)}&background=random`;
 
             return {
-              id: `backend-${video.id}`, // Unique ID prefix
+              id: video.id,
               name: video.title,
               role: "Elite Member",
               text: video.description || "Membre du cercle Elite",
@@ -74,10 +44,8 @@ const TestimonySection = () => {
               rating: 5
             };
           });
-          
-          // Combine backend videos with default ones and ensure unique IDs
-          const combined = [...formattedVideos, ...defaultTestimonials.map(t => ({...t, id: `default-${t.id}`}))];
-          setTestimonials(combined.slice(0, 10));
+
+          setTestimonials(formattedVideos);
         }
       } catch (error) {
         console.error("Failed to fetch elite videos:", error);
@@ -95,8 +63,6 @@ const TestimonySection = () => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  const visibleTestimonials = testimonials; // On garde toutes les cartes pour l'anneau complet
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -120,7 +86,7 @@ const TestimonySection = () => {
         {/* 3D Ring Component */}
         <div className="h-[450px] md:h-[550px] w-full flex items-center justify-center">
           <ThreeDTestimonyRing 
-            testimonials={visibleTestimonials}
+            testimonials={testimonials}
             imageDistance={isMobile ? 550 : 600}
             width={300}
             mobileScaleFactor={0.65}
@@ -129,7 +95,7 @@ const TestimonySection = () => {
         </div>
 
         <div className="mt-20 text-center">
-          <p className="text-zinc-500 text-sm font-black uppercase tracking-[0.3em] animate-pulse">
+          <p className="text-zinc-500 text-xs font-black uppercase tracking-[0.3em] animate-pulse">
             Glissez pour explorer
           </p>
         </div>
