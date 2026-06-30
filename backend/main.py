@@ -5,9 +5,20 @@ from typing import Annotated, List, Optional
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile, status
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Load environment variables
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+
+# Configure Cloudinary
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True
+)
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 from fastapi.middleware.cors import CORSMiddleware
@@ -2695,7 +2706,7 @@ ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".mp4", ".webm",
 
 
 @app.post("/upload/", tags=["Admin"], dependencies=[Depends(auth.get_current_admin_user)])
-async def upload_file(request: Request, file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...)):
     ext = os.path.splitext(file.filename)[1].lower()
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
@@ -2703,16 +2714,35 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
             detail=f"File type not allowed. Allowed extensions: {', '.join(ALLOWED_EXTENSIONS)}",
         )
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    clean_name = file.filename.replace(" ", "_")
-    filename = f"{timestamp}_{clean_name}"
-    file_path = os.path.join(UPLOAD_DIR, filename)
+    # Upload to Cloudinary
+    try:
+        # Read the file content
+        file_content = await file.read()
+        
+        # Determine resource type
+        resource_type = "auto"
+        if ext in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
+            resource_type = "image"
+        elif ext in [".mp4", ".webm"]:
+            resource_type = "video"
+        elif ext == ".pdf":
+            resource_type = "raw"
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-
-    base_url = str(request.base_url).rstrip("/")
-    return {"url": f"{base_url}/uploads/{filename}"}
+        # Upload to Cloudinary
+        result = cloudinary.uploader.upload(
+            file_content,
+            resource_type=resource_type,
+            folder="evolution-trading",
+            public_id=f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{os.path.splitext(file.filename)[0].replace(' ', '_')}"
+        )
+        
+        return {"url": result["secure_url"]}
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to upload file: {str(e)}"
+        )
 
 
 

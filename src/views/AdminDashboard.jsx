@@ -997,15 +997,15 @@ const AdminDashboard = () => {
               <h2 className="text-2xl font-black text-white">Gestion Our Spotlights</h2>
               <BaseButton onClick={() => openModal('spotlight')} variant="primary" size="small">Nouveau Spotlight</BaseButton>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {spotlights.map(spot => (
                 <div key={spot.id} className="bg-zinc-800/50 rounded-2xl overflow-hidden border border-zinc-700">
-                  <img src={spot.image_url} alt={spot.title} className="w-full h-40 object-cover opacity-60" />
-                  <div className="p-4">
-                    <h3 className="font-bold text-white mb-1">{spot.title}</h3>
-                    <p className="text-xs text-zinc-500 mb-4 line-clamp-2">{spot.description}</p>
+                  <img src={spot.image_url} alt={spot.title} className="w-full h-16 object-cover" />
+                  <div className="p-2">
+                    <h3 className="font-bold text-white mb-1 text-sm">{spot.title}</h3>
+                    <p className="text-[10px] text-zinc-500 mb-2 line-clamp-1">{spot.description}</p>
                     <div className="flex justify-between items-center">
-                      <span className={`text-[10px] font-black px-2 py-1 rounded-full ${spot.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                      <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-full ${spot.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                         {spot.is_active ? 'ACTIF' : 'INACTIF'}
                       </span>
                       <button onClick={async () => {
@@ -1013,7 +1013,7 @@ const AdminDashboard = () => {
                           await adminApi.deleteSpotlight(spot.id);
                           setSpotlights(spotlights.filter(s => s.id !== spot.id));
                         }
-                      }} className="text-red-400 hover:text-red-300 text-xs font-bold">Supprimer</button>
+                      }} className="text-red-400 hover:text-red-300 text-[10px] font-bold">Supprimer</button>
                     </div>
                   </div>
                 </div>
@@ -1108,12 +1108,12 @@ const AdminDashboard = () => {
               <BaseButton onClick={() => openModal('video')} variant="primary" size="small">Uploader une Vidéo</BaseButton>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {eliteVideos.map(video => (
-                <div key={video.id} className="bg-zinc-800/50 rounded-2xl p-6 border border-zinc-700 flex flex-col justify-between">
+                <div key={video.id} className="bg-zinc-800/50 rounded-2xl p-3 border border-zinc-700 flex flex-col justify-between">
                   <div>
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="font-bold text-white">{video.title}</h3>
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-bold text-white text-sm">{video.title}</h3>
                       <button 
                         onClick={async () => {
                           if(window.confirm("Supprimer cette vidéo ?")) {
@@ -1121,13 +1121,13 @@ const AdminDashboard = () => {
                             setEliteVideos(eliteVideos.filter(v => v.id !== video.id));
                           }
                         }}
-                        className="text-red-400 hover:text-red-300 text-xs font-bold"
+                        className="text-red-400 hover:text-red-300 text-[10px] font-bold"
                       >
                         Supprimer
                       </button>
                     </div>
-                    <p className="text-xs text-zinc-500 mb-4">{video.description}</p>
-                    <div className="bg-black/40 rounded-xl p-3 text-[10px] font-mono text-zinc-400 truncate">
+                    <p className="text-[10px] text-zinc-500 mb-2 line-clamp-2">{video.description}</p>
+                    <div className="bg-black/40 rounded-xl p-2 text-[8px] font-mono text-zinc-400 truncate">
                       {video.video_url}
                     </div>
                   </div>
@@ -1990,33 +1990,108 @@ const AdminDashboard = () => {
               )}
 
               {modalType === 'spotlight' && (
-                <div>
-                  <label className="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Lien (Optionnel)</label>
-                  <input 
-                    type="url" 
-                    placeholder="https://..."
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-5 py-4 text-white outline-none focus:border-indigo-500 transition-all shadow-inner"
-                    value={formData.link || ''}
-                    onChange={e => setFormData({...formData, link: e.target.value})}
-                  />
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Image (Obligatoire)</label>
+                    <div className="flex flex-col gap-3">
+                      <label className="cursor-pointer">
+                        <div className="flex flex-col items-center justify-center w-full h-32 bg-zinc-900 border-2 border-dashed border-zinc-700 rounded-2xl hover:border-indigo-500 transition-all duration-300">
+                          {uploading ? (
+                            <div className="text-zinc-400 text-xs font-black uppercase tracking-widest">Téléchargement...</div>
+                          ) : (
+                            <>
+                              <div className="text-3xl text-zinc-500 mb-2">📷</div>
+                              <div className="text-xs font-black text-zinc-500 uppercase tracking-widest">Cliquez pour choisir une image</div>
+                              <div className="text-[10px] text-zinc-600">PNG, JPG, GIF jusqu'à 10MB</div>
+                            </>
+                          )}
+                        </div>
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          className="hidden"
+                          onChange={e => handleFileUpload(e, 'image_url')}
+                        />
+                      </label>
+                      {formData.image_url && (
+                        <div className="flex items-center gap-3 text-[10px] text-green-400 font-black italic truncate bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
+                          ✓ IMAGE : <span className="truncate">{formData.image_url}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Lien (Optionnel)</label>
+                    <input 
+                      type="url" 
+                      placeholder="https://..."
+                      className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-5 py-4 text-white outline-none focus:border-indigo-500 transition-all shadow-inner"
+                      value={formData.link || ''}
+                      onChange={e => setFormData({...formData, link: e.target.value})}
+                    />
+                  </div>
                 </div>
               )}
 
               {modalType === 'video' && (
-                <div>
-                  <label className="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Miniature (Optionnel)</label>
-                  <div className="flex flex-col gap-3">
-                    <input 
-                      type="file" 
-                      accept="image/*"
-                      className="w-full text-zinc-500 text-xs file:bg-zinc-800 file:border-none file:rounded-xl file:text-white file:font-black file:uppercase file:text-[10px] file:mr-4 file:px-6 file:py-3 hover:file:bg-zinc-700 cursor-pointer"
-                      onChange={e => handleFileUpload(e, 'thumbnail_url')}
-                    />
-                    {formData.thumbnail_url && (
-                      <div className="text-[10px] text-green-400 font-black italic truncate bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
-                        ✓ MINIATURE : {formData.thumbnail_url}
-                      </div>
-                    )}
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Vidéo (Obligatoire)</label>
+                    <div className="flex flex-col gap-3">
+                      <label className="cursor-pointer">
+                        <div className="flex flex-col items-center justify-center w-full h-32 bg-zinc-900 border-2 border-dashed border-zinc-700 rounded-2xl hover:border-indigo-500 transition-all duration-300">
+                          {uploading ? (
+                            <div className="text-zinc-400 text-xs font-black uppercase tracking-widest">Téléchargement...</div>
+                          ) : (
+                            <>
+                              <div className="text-3xl text-zinc-500 mb-2">🎥</div>
+                              <div className="text-xs font-black text-zinc-500 uppercase tracking-widest">Cliquez pour choisir une vidéo</div>
+                              <div className="text-[10px] text-zinc-600">MP4, WEBM jusqu'à 100MB</div>
+                            </>
+                          )}
+                        </div>
+                        <input 
+                          type="file" 
+                          accept="video/*"
+                          className="hidden"
+                          onChange={e => handleFileUpload(e, 'video_url')}
+                        />
+                      </label>
+                      {formData.video_url && (
+                        <div className="flex items-center gap-3 text-[10px] text-green-400 font-black italic truncate bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
+                          ✓ VIDÉO : <span className="truncate">{formData.video_url}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Miniature (Optionnel)</label>
+                    <div className="flex flex-col gap-3">
+                      <label className="cursor-pointer">
+                        <div className="flex flex-col items-center justify-center w-full h-32 bg-zinc-900 border-2 border-dashed border-zinc-700 rounded-2xl hover:border-indigo-500 transition-all duration-300">
+                          {uploading ? (
+                            <div className="text-zinc-400 text-xs font-black uppercase tracking-widest">Téléchargement...</div>
+                          ) : (
+                            <>
+                              <div className="text-3xl text-zinc-500 mb-2">📷</div>
+                              <div className="text-xs font-black text-zinc-500 uppercase tracking-widest">Cliquez pour choisir une miniature</div>
+                              <div className="text-[10px] text-zinc-600">PNG, JPG, GIF jusqu'à 10MB</div>
+                            </>
+                          )}
+                        </div>
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          className="hidden"
+                          onChange={e => handleFileUpload(e, 'thumbnail_url')}
+                        />
+                      </label>
+                      {formData.thumbnail_url && (
+                        <div className="flex items-center gap-3 text-[10px] text-green-400 font-black italic truncate bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
+                          ✓ MINIATURE : <span className="truncate">{formData.thumbnail_url}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
@@ -2053,15 +2128,28 @@ const AdminDashboard = () => {
                     <div>
                       <label className="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Replay Vidéo (Optionnel)</label>
                       <div className="flex flex-col gap-3">
-                        <input 
-                          type="file" 
-                          accept="video/*"
-                          className="w-full text-zinc-500 text-xs file:bg-zinc-800 file:border-none file:rounded-xl file:text-white file:font-black file:uppercase file:text-[10px] file:mr-4 file:px-6 file:py-3 hover:file:bg-zinc-700 cursor-pointer"
-                          onChange={e => handleFileUpload(e, 'replay_url')}
-                        />
+                        <label className="cursor-pointer">
+                          <div className="flex flex-col items-center justify-center w-full h-32 bg-zinc-900 border-2 border-dashed border-zinc-700 rounded-2xl hover:border-indigo-500 transition-all duration-300">
+                            {uploading ? (
+                              <div className="text-zinc-400 text-xs font-black uppercase tracking-widest">Téléchargement...</div>
+                            ) : (
+                              <>
+                                <div className="text-3xl text-zinc-500 mb-2">🎥</div>
+                                <div className="text-xs font-black text-zinc-500 uppercase tracking-widest">Cliquez pour choisir un replay</div>
+                                <div className="text-[10px] text-zinc-600">MP4, WEBM jusqu'à 100MB</div>
+                              </>
+                            )}
+                          </div>
+                          <input 
+                            type="file" 
+                            accept="video/*"
+                            className="hidden"
+                            onChange={e => handleFileUpload(e, 'replay_url')}
+                          />
+                        </label>
                         {formData.replay_url && (
-                          <div className="text-[10px] text-green-400 font-black italic truncate bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
-                            ✓ REPLAY : {formData.replay_url}
+                          <div className="flex items-center gap-3 text-[10px] text-green-400 font-black italic truncate bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
+                            ✓ REPLAY : <span className="truncate">{formData.replay_url}</span>
                           </div>
                         )}
                       </div>
@@ -2069,15 +2157,28 @@ const AdminDashboard = () => {
                     <div>
                       <label className="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Miniature (Optionnel)</label>
                       <div className="flex flex-col gap-3">
-                        <input 
-                          type="file" 
-                          accept="image/*"
-                          className="w-full text-zinc-500 text-xs file:bg-zinc-800 file:border-none file:rounded-xl file:text-white file:font-black file:uppercase file:text-[10px] file:mr-4 file:px-6 file:py-3 hover:file:bg-zinc-700 cursor-pointer"
-                          onChange={e => handleFileUpload(e, 'thumbnail_url')}
-                        />
+                        <label className="cursor-pointer">
+                          <div className="flex flex-col items-center justify-center w-full h-32 bg-zinc-900 border-2 border-dashed border-zinc-700 rounded-2xl hover:border-indigo-500 transition-all duration-300">
+                            {uploading ? (
+                              <div className="text-zinc-400 text-xs font-black uppercase tracking-widest">Téléchargement...</div>
+                            ) : (
+                              <>
+                                <div className="text-3xl text-zinc-500 mb-2">📷</div>
+                                <div className="text-xs font-black text-zinc-500 uppercase tracking-widest">Cliquez pour choisir une miniature</div>
+                                <div className="text-[10px] text-zinc-600">PNG, JPG, GIF jusqu'à 10MB</div>
+                              </>
+                            )}
+                          </div>
+                          <input 
+                            type="file" 
+                            accept="image/*"
+                            className="hidden"
+                            onChange={e => handleFileUpload(e, 'thumbnail_url')}
+                          />
+                        </label>
                         {formData.thumbnail_url && (
-                          <div className="text-[10px] text-green-400 font-black italic truncate bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
-                            ✓ MINIATURE : {formData.thumbnail_url}
+                          <div className="flex items-center gap-3 text-[10px] text-green-400 font-black italic truncate bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
+                            ✓ MINIATURE : <span className="truncate">{formData.thumbnail_url}</span>
                           </div>
                         )}
                       </div>
