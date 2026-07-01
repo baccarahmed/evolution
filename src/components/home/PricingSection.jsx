@@ -214,7 +214,7 @@ const PricingSection = () => {
         </div>
 
         <div className="grid gap-6 md:gap-8 justify-center items-stretch max-w-7xl mx-auto w-full">
-          <div className="grid gap-5 md:gap-7 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 md:gap-7 md:grid-cols-2 lg:grid-cols-3 justify-items-center">
             {plansToShow.map((plan, idx) => {
               const Icon = getPlanIcon(idx);
               return (
