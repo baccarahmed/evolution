@@ -6,12 +6,12 @@ const SpotlightSection = () => {
   const [selectedImg, setSelectedImg] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
   const [images, setImages] = useState([
-    'https://images.unsplash.com/photo-1611974717483-9b250aa63d3f?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1642388691919-61699924e930?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=800&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1640341719917-0a937004d4d2?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1611974717483-9b250aa63d3f?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1642790106117-e829e043486a?q=80&w=800&auto=format&fit=crop',
   ]);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ const SpotlightSection = () => {
                   crossOrigin="anonymous"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                   onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=800&auto=format&fit=crop';
+                    e.target.src = 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=800&auto=format&fit=crop';
                   }}
                 />
               </div>
@@ -105,7 +105,11 @@ const SpotlightSection = () => {
                 <img 
                   src={img} 
                   alt="Spotlight" 
+                  crossOrigin="anonymous"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                  onError={(e) => {
+                    e.target.src = 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=800&auto=format&fit=crop';
+                  }}
                 />
               </div>
             ))}

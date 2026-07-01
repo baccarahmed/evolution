@@ -127,6 +127,8 @@ const PricingSection = () => {
     setBinanceManualData(null);
   };
 
+  const [hoveredPlanId, setHoveredPlanId] = React.useState(null);
+  
   const getPlanIcon = (idx) => {
     if (idx === 0) return Rocket;
     if (idx === 1) return Zap;
@@ -209,7 +211,7 @@ const PricingSection = () => {
           <div className={`grid gap-5 md:gap-7 ${gridColsClass}`}>
             {plansToShow.map((plan, idx) => {
               const Icon = getPlanIcon(idx);
-              const [isHovered, setIsHovered] = React.useState(false);
+              const isHovered = hoveredPlanId === plan.id;
               return (
                 <motion.div
                   key={plan.id}
@@ -218,8 +220,8 @@ const PricingSection = () => {
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: idx * 0.1, duration: 0.5, type: "spring", bounce: 0.25 }}
                   whileHover={{ y: -8, scale: 1.02 }}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
+                  onMouseEnter={() => setHoveredPlanId(plan.id)}
+                  onMouseLeave={() => setHoveredPlanId(null)}
                   className={`relative flex flex-col p-4 md:p-5 rounded-[1.75rem] bg-slate-900/50 border backdrop-blur-2xl transition-all duration-400 cursor-pointer will-change-transform overflow-hidden ${
                     plan.is_popular 
                       ? 'popular-border border-transparent shadow-2xl card-glow z-20 bg-slate-900/70' 
