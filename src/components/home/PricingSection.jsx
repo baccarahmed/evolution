@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Check, Zap, Crown, Rocket, ArrowRight, ShieldCheck, Globe, Infinity, Calendar, ChevronRight } from 'lucide-react';
+import { Check, Zap, Crown, Rocket, ArrowRight, ShieldCheck, Globe, Infinity, Calendar, ChevronRight, Star, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { livesApi, paymentsApi } from '../../api';
 import { formatError } from '../../utils/errorUtils';
@@ -28,7 +28,7 @@ function AnimatedPrice({ price, currency = 'DT', style = {} }) {
   return (
     <div className="flex items-center gap-0" style={style}>
       {digits.map((digit, i) => (
-        <div key={i} className="relative overflow-hidden h-[2.75rem] w-[1.4rem] flex items-center justify-center">
+        <div key={i} className="relative overflow-hidden h-[2.25rem] w-[1.2rem] flex items-center justify-center">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.span
               key={`price-${i}-${digit}`}
@@ -41,14 +41,14 @@ function AnimatedPrice({ price, currency = 'DT', style = {} }) {
                 damping: 26,
                 delay: i * 0.05,
               }}
-              className="text-4xl md:text-5xl font-black text-slate-50 leading-none absolute"
+              className="text-3xl md:text-4xl font-black text-slate-50 leading-none absolute"
             >
               {digit}
             </motion.span>
           </AnimatePresence>
         </div>
       ))}
-      <span className="text-lg md:text-xl font-bold text-slate-400 ml-2">{currency}</span>
+      <span className="text-sm md:text-base font-semibold text-slate-400 ml-2">{currency}</span>
     </div>
   );
 }
@@ -151,13 +151,20 @@ const PricingSection = () => {
   return (
     <section className="w-full py-32 px-6 relative overflow-hidden flex flex-col items-center bg-transparent" id="plans">
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
         .plus-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .cormorant { font-family: 'Cormorant', serif; }
         .evolution-gradient {
-          background: linear-gradient(to right, #F59E0B, #FBBF24, #8B5CF6);
+          background: linear-gradient(135deg, #F59E0B, #FBBF24, #A855F7, #8B5CF6);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+          background-size: 200% 200%;
+          animation: gradient-shift 8s ease infinite;
+        }
+        @keyframes gradient-shift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
         }
         .popular-border {
           position: relative;
@@ -165,10 +172,12 @@ const PricingSection = () => {
         .popular-border::before {
           content: '';
           position: absolute;
-          inset: -2px;
-          border-radius: 2.5rem;
-          padding: 2px;
-          background: linear-gradient(135deg, #F59E0B, #8B5CF6, #EC4899);
+          inset: -3px;
+          border-radius: 2.25rem;
+          padding: 3px;
+          background: linear-gradient(135deg, #F59E0B, #A855F7, #EC4899, #F59E0B);
+          background-size: 300% 300%;
+          animation: border-glow 6s ease infinite;
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
@@ -176,29 +185,36 @@ const PricingSection = () => {
           pointer-events: none;
           z-index: 0;
         }
+        @keyframes border-glow {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .card-glow {
+          box-shadow: 0 0 60px -20px rgba(245, 158, 11, 0.15), 0 0 120px -40px rgba(139, 92, 246, 0.1);
+        }
       `}} />
 
       {/* Subtle Background Glows */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F59E0B]/30 to-transparent" />
-      <div className="absolute top-1/3 -left-[20%] w-[60%] h-[60%] bg-[#8B5CF6]/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/3 -right-[20%] w-[60%] h-[60%] bg-[#F59E0B]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F59E0B]/20 via-[#8B5CF6]/20 to-transparent" />
+      <div className="absolute top-1/4 -left-[30%] w-[70%] h-[70%] bg-[#8B5CF6]/8 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-[30%] w-[70%] h-[70%] bg-[#F59E0B]/8 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-20 space-y-8">
-          <div className="inline-flex items-center gap-2 rounded-full px-5 py-2 border border-amber-500/20 bg-amber-500/5">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-            <span className="text-xs font-bold tracking-[0.3em] uppercase text-amber-400">Elite Access</span>
+        <div className="text-center mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 border border-amber-500/30 bg-amber-500/10 backdrop-blur-sm">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[10px] font-black tracking-[0.35em] uppercase text-amber-300">Elite Evolution</span>
           </div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-slate-50 leading-tight">
-            Evolution <br /> <span className="evolution-gradient italic">Tiers</span>
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-50 leading-tight">
+            <span className="cormorant italic">Evolution</span> <span className="evolution-gradient font-black">Tiers</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl font-medium">
+          <p className="max-w-xl mx-auto text-slate-400 text-base md:text-lg font-medium">
             Choose the perfect tier for your trading journey — from beginner to professional
           </p>
         </div>
 
-        <div className="grid gap-8 md:gap-10 justify-center items-stretch max-w-7xl mx-auto w-full">
-          <div className={`grid gap-6 md:gap-8 ${gridColsClass}`}>
+        <div className="grid gap-6 md:gap-8 justify-center items-stretch max-w-7xl mx-auto w-full">
+          <div className={`grid gap-5 md:gap-7 ${gridColsClass}`}>
             {plansToShow.map((plan, idx) => {
               const Icon = getPlanIcon(idx);
               return (
@@ -207,40 +223,56 @@ const PricingSection = () => {
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
-                  transition={{ delay: idx * 0.12, duration: 0.5, type: "spring", bounce: 0.3 }}
-                  whileHover={{ y: -10, scale: 1.04 }}
-                  className={`relative flex flex-col p-5 md:p-7 rounded-[1.75rem] bg-slate-900/60 border backdrop-blur-xl transition-all duration-300 cursor-pointer will-change-transform ${
+                  transition={{ delay: idx * 0.1, duration: 0.5, type: "spring", bounce: 0.25 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className={`relative flex flex-col p-4 md:p-5 rounded-[1.75rem] bg-slate-900/50 border backdrop-blur-2xl transition-all duration-400 cursor-pointer will-change-transform overflow-hidden ${
                     plan.is_popular 
-                      ? 'popular-border border-transparent shadow-2xl shadow-amber-500/15 z-10 bg-slate-900/80' 
-                      : 'border-slate-700/50 hover:border-amber-500/30 hover:bg-slate-900/70'
+                      ? 'popular-border border-transparent shadow-2xl card-glow z-20 bg-slate-900/70' 
+                      : 'border-slate-800/50 hover:border-amber-500/40 hover:bg-slate-900/60 hover:shadow-xl hover:shadow-amber-500/10'
                   }`}
                   onClick={() => handlePlanClick(plan)}
                 >
+                  {/* Background Shine for Popular */}
+                  {plan.is_popular && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-purple-500/5 pointer-events-none" />
+                  )}
+                  
                   {/* Top Surface Gradient Line */}
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
                   {/* Popular Badge */}
                   {plan.is_popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-[0.3em] rounded-full shadow-lg shadow-amber-500/30 z-20">
-                      Most Recommended
-                    </div>
+                    <motion.div 
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                      className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 text-[9px] font-black uppercase tracking-[0.35em] rounded-full shadow-2xl shadow-amber-500/40 z-30"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <Star className="w-3 h-3 fill-amber-900/50 text-amber-900" />
+                        Most Recommended
+                        <Star className="w-3 h-3 fill-amber-900/50 text-amber-900" />
+                      </div>
+                    </motion.div>
                   )}
 
                   {/* Card Header */}
-                  <div className="flex flex-col items-center text-center space-y-4 mb-6">
-                    <div className={`p-3 rounded-[1.5rem] transition-transform duration-300 ${
+                  <div className="flex flex-col items-center text-center space-y-3 mb-5 relative z-10">
+                    <div className={`p-3 rounded-xl transition-all duration-400 ${
                       plan.is_popular 
-                        ? 'bg-amber-500/10 text-amber-400 ring-2 ring-amber-500/20' 
-                        : 'bg-slate-800/50 text-slate-400'
+                        ? 'bg-gradient-to-br from-amber-500/20 to-purple-500/20 text-amber-400 ring-2 ring-amber-500/30 shadow-lg shadow-amber-500/20' 
+                        : 'bg-slate-800/40 text-slate-400'
                     }`}>
-                      <Icon className="w-7 h-7" strokeWidth={2} />
+                      <Icon className="w-6 h-6" strokeWidth={2} />
                     </div>
 
                     <div className="space-y-2">
-                      <h3 className="text-xl font-black text-slate-50 uppercase tracking-tight">
+                      <h3 className={`text-lg font-black uppercase tracking-tight ${
+                        plan.is_popular ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500' : 'text-slate-50'
+                      }`}>
                         {plan.name}
                       </h3>
-                      <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">
+                      <p className="text-slate-400 text-xs leading-relaxed max-w-xs mx-auto">
                         {plan.description || "Master the markets with elite guidance."}
                       </p>
                     </div>
@@ -254,44 +286,53 @@ const PricingSection = () => {
                     </div>
 
                     {/* Duration */}
-                    <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold bg-slate-800/30 px-3 py-1.5 rounded-full border border-slate-700/30">
-                      <Calendar size={14} className="text-amber-400" />
+                    <div className="flex items-center gap-2 text-slate-500 text-[11px] font-semibold bg-slate-800/40 px-3 py-1.5 rounded-full border border-slate-700/40">
+                      <Calendar size={13} className={plan.is_popular ? 'text-amber-400' : 'text-slate-500'} />
                       {plan.duration_months} Months Access
                     </div>
 
                     {/* CTA Button */}
                     <button 
                       onClick={(e) => { e.stopPropagation(); handlePlanClick(plan); }}
-                      className={`group relative w-full h-12 px-6 rounded-[1rem] font-extrabold text-sm transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden ${
+                      className={`group relative w-full h-11 px-6 rounded-[1rem] font-extrabold text-xs transition-all duration-400 flex items-center justify-center gap-2 overflow-hidden ${
                         plan.is_popular 
-                          ? 'bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 shadow-xl shadow-amber-500/30 hover:shadow-2xl hover:shadow-amber-500/40 hover:brightness-110 hover:scale-[1.01] active:scale-[0.98]' 
-                          : 'bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-slate-600'
+                          ? 'bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 shadow-2xl shadow-amber-500/40 hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:brightness-110 hover:scale-[1.02] active:scale-[0.97]' 
+                          : 'bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-slate-600 hover:shadow-lg'
                       }`}
                     >
                       <span className="relative z-10">
                         {plan.button_text || (user?.active_subscription ? 'Go to Dashboard' : 'Get Started')}
                       </span>
-                      <ArrowRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
+                      <ArrowRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-1 transition-transform duration-400" />
                       
-                      {/* Subtle shine effect for popular */}
+                      {/* Shine effect for popular */}
                       {plan.is_popular && (
-                        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-out" />
+                        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-1000 ease-out" />
                       )}
                     </button>
                   </div>
 
                   {/* Features List */}
-                  <div className="flex-1 pt-6 border-t border-slate-700/30">
-                    <div className="space-y-3">
+                  <div className="flex-1 pt-4 border-t border-slate-700/40 relative z-10">
+                    <div className="space-y-2.5">
                       {plan.features.map((feature, fIdx) => (
-                        <div key={fIdx} className="flex gap-3 items-start text-slate-300 group-hover:text-slate-100 transition-colors duration-300">
+                        <motion.div 
+                          key={fIdx} 
+                          initial={{ opacity: 0, x: -8 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: idx * 0.1 + fIdx * 0.03 }}
+                          className="flex gap-2.5 items-start text-slate-300 group-hover:text-slate-100 transition-colors duration-300"
+                        >
                           <div className={`flex-shrink-0 mt-0.5 w-5 h-5 rounded-full flex items-center justify-center ${
-                            plan.is_popular ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-500 group-hover:text-slate-300'
+                            plan.is_popular 
+                              ? 'bg-gradient-to-br from-amber-500/25 to-purple-500/25 text-amber-400' 
+                              : 'bg-slate-800 text-slate-500 group-hover:text-slate-300'
                           }`}>
                             <Check className="w-3 h-3" strokeWidth={3} />
                           </div>
-                          <span className="font-medium leading-relaxed text-sm">{feature}</span>
-                        </div>
+                          <span className="font-medium leading-relaxed text-xs">{feature}</span>
+                        </motion.div>
                       ))}
                     </div>
                   </div>
@@ -302,16 +343,16 @@ const PricingSection = () => {
         </div>
 
         {/* Trust Badges */}
-        <div className="mt-24 flex flex-wrap justify-center gap-x-12 gap-y-6 text-slate-600/70">
-          <div className="flex items-center gap-3 font-black text-lg text-slate-400">
+        <div className="mt-20 flex flex-wrap justify-center gap-x-12 gap-y-6 text-slate-500/80">
+          <div className="flex items-center gap-3 font-semibold text-base text-slate-400">
             <ShieldCheck className="w-6 h-6 text-amber-400" strokeWidth={2} /> 
             <span>Secured Transfers</span>
           </div>
-          <div className="flex items-center gap-3 font-black text-lg text-slate-400">
+          <div className="flex items-center gap-3 font-semibold text-base text-slate-400">
             <Globe className="w-6 h-6 text-amber-400" strokeWidth={2} /> 
             <span>Global Network</span>
           </div>
-          <div className="flex items-center gap-3 font-black text-lg text-slate-400">
+          <div className="flex items-center gap-3 font-semibold text-base text-slate-400">
             <Infinity className="w-6 h-6 text-amber-400" strokeWidth={2} /> 
             <span>Unlimited Access</span>
           </div>
