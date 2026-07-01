@@ -137,16 +137,8 @@ const PricingSection = () => {
 
   if (loading) return null;
 
-  // Grid logic: 
-  // - If <= 3 items: Force 1 line (lg:grid-cols-3 or lg:grid-cols-2 etc)
-  // - If > 3 items: 2 columns per line (lg:grid-cols-2)
-  const gridColsClass = plansToShow.length > 3 
-    ? 'lg:grid-cols-2' 
-    : plansToShow.length === 3
-      ? 'lg:grid-cols-3'
-      : plansToShow.length === 2
-        ? 'lg:grid-cols-2'
-        : 'lg:grid-cols-1';
+  // Always show 3 cards per row on large screens!
+  const gridColsClass = 'md:grid-cols-2 lg:grid-cols-3';
 
   return (
     <section className="w-full py-32 px-6 relative overflow-hidden flex flex-col items-center bg-transparent" id="plans">
@@ -217,6 +209,7 @@ const PricingSection = () => {
           <div className={`grid gap-5 md:gap-7 ${gridColsClass}`}>
             {plansToShow.map((plan, idx) => {
               const Icon = getPlanIcon(idx);
+              const [isHovered, setIsHovered] = React.useState(false);
               return (
                 <motion.div
                   key={plan.id}
@@ -225,6 +218,8 @@ const PricingSection = () => {
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: idx * 0.1, duration: 0.5, type: "spring", bounce: 0.25 }}
                   whileHover={{ y: -8, scale: 1.02 }}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
                   className={`relative flex flex-col p-4 md:p-5 rounded-[1.75rem] bg-slate-900/50 border backdrop-blur-2xl transition-all duration-400 cursor-pointer will-change-transform overflow-hidden ${
                     plan.is_popular 
                       ? 'popular-border border-transparent shadow-2xl card-glow z-20 bg-slate-900/70' 
@@ -312,29 +307,51 @@ const PricingSection = () => {
                     </button>
                   </div>
 
-                  {/* Features List */}
-                  <div className="flex-1 pt-4 border-t border-slate-700/40 relative z-10">
-                    <div className="space-y-2.5">
-                      {plan.features.map((feature, fIdx) => (
-                        <motion.div 
-                          key={fIdx} 
-                          initial={{ opacity: 0, x: -8 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: idx * 0.1 + fIdx * 0.03 }}
-                          className="flex gap-2.5 items-start text-slate-300 group-hover:text-slate-100 transition-colors duration-300"
-                        >
-                          <div className={`flex-shrink-0 mt-0.5 w-5 h-5 rounded-full flex items-center justify-center ${
-                            plan.is_popular 
-                              ? 'bg-gradient-to-br from-amber-500/25 to-purple-500/25 text-amber-400' 
-                              : 'bg-slate-800 text-slate-500 group-hover:text-slate-300'
-                          }`}>
-                            <Check className="w-3 h-3" strokeWidth={3} />
-                          </div>
-                          <span className="font-medium leading-relaxed text-xs">{feature}</span>
-                        </motion.div>
-                      ))}
-                    </div>
+                  {/* Features List (Show on hover only!) */}
+                  <div className="flex-1 pt-4 border-t border-slate-700/40 relative z-10 overflow-hidden">
+                    {/* Hover hint - fades out when hovered */}
+                    <motion.div 
+                      animate={{ opacity: isHovered ? 0 : 1 }}
+                      transition={{ duration: 0.25 }}
+                      className="mt-2 text-center text-[10px] text-slate-500"
+                    >
+                      Hover to see features
+                    </motion.div>
+                    
+                    {/* Features container - slides down when hovered */}
+                    <motion.div 
+                      animate={{ 
+                        height: isHovered ? 'auto' : 0, 
+                        opacity: isHovered ? 1 : 0,
+                        marginTop: isHovered ? 0 : -8
+                      }}
+                      transition={{ duration: 0.35, ease: 'easeOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="space-y-2.5">
+                        {plan.features.map((feature, fIdx) => (
+                          <motion.div 
+                            key={fIdx} 
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ 
+                              opacity: isHovered ? 1 : 0, 
+                              x: isHovered ? 0 : -8 
+                            }}
+                            transition={{ delay: fIdx * 0.04, duration: 0.25 }}
+                            className="flex gap-2.5 items-start text-slate-300"
+                          >
+                            <div className={`flex-shrink-0 mt-0.5 w-5 h-5 rounded-full flex items-center justify-center ${
+                              plan.is_popular 
+                                ? 'bg-gradient-to-br from-amber-500/25 to-purple-500/25 text-amber-400' 
+                                : 'bg-slate-800 text-slate-500'
+                            }`}>
+                              <Check className="w-3 h-3" strokeWidth={3} />
+                            </div>
+                            <span className="font-medium leading-relaxed text-xs">{feature}</span>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
                   </div>
                 </motion.div>
               );
